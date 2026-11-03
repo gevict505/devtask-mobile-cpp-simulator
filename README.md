@@ -2,6 +2,7 @@
 
 A sleek, interactive web application that simulates a native mobile application interface (Flutter UI style) integrated with a C++ logic execution terminal and developer portfolio dashboard.
 
+open it at: https://sites.google.com/view/glenporto/full-page-embed
 ---
 
 ##  Main Features
