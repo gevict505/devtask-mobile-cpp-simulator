@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTask & C++ Simulator | Glen Victory Sihombing - GDGoC PENS</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gBlue: '#4285F4',
+                        gRed: '#EA4335',
+                        gYellow: '#FBBC05',
+                        gGreen: '#34A853',
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom scrollbar and typing animations */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.4);
+            border-radius: 4px;
+        }
+        .typing-cursor::after {
+            content: '█';
+            animation: blink 1s step-end infinite;
+            color: #34A853;
+        }
+        @keyframes blink {
+            80%, 100% { opacity: 0; }
+        }
+        .phone-frame {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Gradient glows */
+        .g-glow {
+            background: linear-gradient(135deg, rgba(66,133,244,0.15), rgba(52,168,83,0.15));
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen transition-colors duration-300">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand & GDGoC Badge -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center space-x-1 font-bold text-lg tracking-tight">
+                    <span class="text-gBlue">&lt;</span>
+                    <span class="text-gRed">Dev</span><span class="text-gYellow">Task</span>
+                    <span class="text-gGreen">&amp;</span>
+                    <span class="text-gBlue">C++</span>
+                    <span class="text-gRed">&gt;</span>
+                </div>
+                <span class="hidden sm:inline-block text-xs bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-full font-medium border border-slate-300 dark:border-slate-700">
+                    <i class="fa-brands fa-google text-gBlue mr-1"></i> GDGoC PENS Recruitment Project
+                </span>
+            </div>
+
+            <!-- Global Actions & View Modes -->
+            <div class="flex items-center gap-2">
+                <!-- Device View Toggle Button -->
+                <button id="viewToggleBtn" onclick="toggleViewMode()" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5 shadow-sm">
+                    <i id="viewIcon" class="fa-solid fa-mobile-screen text-gBlue"></i>
+                    <span id="viewText">Switch to Desktop Mode</span>
+                </button>
+
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-amber-500 dark:text-amber-400 transition" title="Toggle Theme">
+                    <i id="themeIcon" class="fa-solid fa-sun"></i>
+                </button>
+
+                <!-- Toast Notification Container -->
+                <div id="toastContainer" class="fixed top-16 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        
+        <!-- APPLICANT HERO BANNER -->
+        <div class="mb-6 p-4 md:p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border border-slate-700 shadow-xl relative overflow-hidden">
+            <!-- Decorative Google Accent Lights -->
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-gBlue/20 rounded-full blur-3xl"></div>
+            <div class="absolute right-20 -top-10 w-32 h-32 bg-gGreen/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-slate-800 border-2 border-gBlue p-1 flex-shrink-0 flex items-center justify-center text-2xl font-black text-gBlue shadow-md">
+                        GV
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white">Glen Victory Sihombing</h1>
+                            <span class="text-xs bg-gBlue/20 text-blue-300 border border-blue-400/30 px-2 py-0.5 rounded-full font-mono">STr Teknik Komputer '26</span>
+                        </div>
+                        <p class="text-xs md:text-sm text-slate-300 mt-1">
+                            Applicant for <strong class="text-gGreen">GDGoC PENS</strong> — Research & Development (Mobile/Web Division)
+                        </p>
+                        <div class="flex items-center gap-2 mt-2 flex-wrap">
+                            <span class="text-[11px] bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-slate-300"><i class="fa-solid fa-code text-gRed mr-1"></i> C / C++ Core Logic</span>
+                            <span class="text-[11px] bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-slate-300"><i class="fa-solid fa-server text-gYellow mr-1"></i> Linux Samba Server (IEEE Draft)</span>
+                            <span class="text-[11px] bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-slate-300"><i class="fa-solid fa-cube text-gBlue mr-1"></i> Blender 3D Spatial Layout</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 self-end md:self-auto">
+                    <button onclick="switchTab('bio')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-gBlue hover:bg-blue-600 text-white transition shadow-md flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-gear"></i> Dev Profile & Pitch
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- APP CONTENT LAYOUT (MOBILE FRAME vs DESKTOP DASHBOARD) -->
+        <div id="appLayoutContainer" class="flex justify-center transition-all duration-300">
+            
+            <!-- PHONE FRAME WRAPPER (DEFAULT MOBILE SIMULATOR) -->
+            <div id="phoneFrame" class="phone-frame w-full max-w-md bg-white dark:bg-slate-900 border-4 sm:border-[10px] border-slate-800 dark:border-slate-800 rounded-[2.5rem] shadow-2xl overflow-hidden min-h-[700px] flex flex-col relative">
+                
+                <!-- MOBILE STATUS BAR SIMULATION -->
+                <div class="bg-slate-900 text-white px-6 py-2 flex items-center justify-between text-xs font-medium select-none z-20">
+                    <span>09:41</span>
+                    <!-- Dynamic Island / Speaker Notch -->
+                    <div class="w-20 h-4 bg-black rounded-full mx-auto hidden sm:block"></div>
+                    <div class="flex items-center space-x-1.5 text-[10px]">
+                        <i class="fa-solid fa-wifi"></i>
+                        <i class="fa-solid fa-signal"></i>
+                        <i class="fa-solid fa-battery-full text-gGreen"></i>
+                    </div>
+                </div>
+
+                <!-- MOBILE APP HEADER -->
+                <div class="px-4 py-3 bg-slate-50 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between z-10">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-gRed animate-pulse"></div>
+                        <span id="activeTabTitle" class="font-bold text-sm tracking-tight text-slate-800 dark:text-slate-100">Study Planner</span>
+                    </div>
+                    <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-gBlue/10 text-gBlue font-bold">PENS Edition</span>
+                </div>
+
+                <!-- MAIN SCROLLABLE APP BODY -->
+                <div class="flex-1 overflow-y-auto p-4 space-y-4 relative" id="appBodyContent">
+                    
+                    <!-- TAB 1: DEV TASK STUDY PLANNER -->
+                    <section id="tab-tasks" class="space-y-4">
+                        <!-- Progress Overview Card -->
+                        <div class="p-4 rounded-xl bg-gradient-to-br from-gBlue/10 via-slate-100 dark:via-slate-800 to-gGreen/10 border border-slate-200 dark:border-slate-700/60 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">PENS Study Progress</h3>
+                                    <p class="text-lg font-extrabold text-slate-800 dark:text-slate-100" id="progressPercentage">0% Completed</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-gBlue/20 text-gBlue flex items-center justify-center font-bold text-sm" id="progressCircle">
+                                    <i class="fa-solid fa-list-check"></i>
+                                </div>
+                            </div>
+                            <!-- Progress Bar -->
+                            <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div id="progressBarFill" class="h-full bg-gradient-to-r from-gBlue via-gYellow to-gGreen transition-all duration-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 mt-2 font-mono">
+                                <span id="statCompleted">0 Completed</span>
+                                <span id="statTotal">0 Tasks Total</span>
+                            </div>
+                        </div>
+
+                        <!-- Add Task Input Form -->
+                        <form onsubmit="handleAddTask(event)" class="space-y-2 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                                <i class="fa-solid fa-plus-circle text-gBlue"></i> Tambah Tugas Baru
+                            </div>
+                            <input type="text" id="newTaskInput" placeholder="Contoh: Latihan Loop C++ & Dynamic Array..." required
+                                class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-gBlue">
+                            
+                            <div class="flex gap-2">
+                                <select id="newTaskCategory" class="flex-1 px-2 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none">
+                                    <option value="C++ Programming">💻 C++ Programming</option>
+                                    <option value="Digital Logic">⚡ Logika Digital</option>
+                                    <option value="Linux Samba">🐧 Riset Linux Server</option>
+                                    <option value="GDGoC Mobile">📱 GDGoC Mobile Dev</option>
+                                    <option value="General Engineering">🎓 Umum / PENS</option>
+                                </select>
+                                <select id="newTaskPriority" class="w-28 px-2 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none">
+                                    <option value="High">🔴 High</option>
+                                    <option value="Medium" selected>🟡 Med</option>
+                                    <option value="Low">🟢 Low</option>
+                                </select>
+                                <button type="submit" class="px-3 py-1.5 text-xs font-bold bg-gBlue hover:bg-blue-600 text-white rounded-lg transition">
+                                    Simpan
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Filter Controls -->
+                        <div class="flex items-center justify-between text-xs border-b border-slate-200 dark:border-slate-800 pb-2">
+                            <div class="flex gap-1">
+                                <button onclick="setFilter('all')" id="filter-all" class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-gBlue text-white">All</button>
+                                <button onclick="setFilter('active')" id="filter-active" class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Active</button>
+                                <button onclick="setFilter('completed')" id="filter-completed" class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Done</button>
+                            </div>
+                            <select onchange="setCategoryFilter(this.value)" class="text-[11px] bg-transparent border-none font-semibold text-slate-500 focus:outline-none cursor-pointer">
+                                <option value="all">All Categories</option>
+                                <option value="C++ Programming">C++ Programming</option>
+                                <option value="Digital Logic">Logika Digital</option>
+                                <option value="Linux Samba">Linux Server</option>
+                                <option value="GDGoC Mobile">GDGoC Mobile</option>
+                            </select>
+                        </div>
+
+                        <!-- Dynamic Task List -->
+                        <div id="taskList" class="space-y-2 min-h-[220px]">
+                            <!-- Tasks populated by JS -->
+                        </div>
+                    </section>
+
+                    <!-- TAB 2: C++ EXECUTION SIMULATOR -->
+                    <section id="tab-cpp" class="space-y-4 hidden">
+                        <!-- Code Preset Selector -->
+                        <div class="flex items-center justify-between gap-2 bg-slate-50 dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <span class="text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                                <i class="fa-solid fa-code text-gRed"></i> C++ Logic Preset:
+                            </span>
+                            <select id="cppPresetSelect" onchange="loadCppPreset(this.value)" class="text-xs px-2 py-1 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none text-gBlue font-semibold">
+                                <option value="binary_search">1. Binary Search & Array Sort</option>
+                                <option value="gpa_calc">2. IPK Student Grade Calculator</option>
+                                <option value="samba_log">3. Linux Samba Log Parser Simulator</option>
+                            </select>
+                        </div>
+
+                        <!-- Code Editor Container -->
+                        <div class="rounded-xl overflow-hidden border border-slate-700 bg-slate-950 font-mono text-xs shadow-md">
+                            <!-- Code Header bar -->
+                            <div class="bg-slate-900 px-3 py-1.5 flex items-center justify-between border-b border-slate-800 text-slate-400 text-[11px]">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                                    <span class="ml-2 font-semibold text-slate-300">main.cpp</span>
+                                </span>
+                                <span class="text-slate-500">GCC C++20</span>
+                            </div>
+                            
+                            <!-- Editable C++ Code Area -->
+                            <div class="relative">
+                                <textarea id="cppCodeTextarea" rows="11" spellcheck="false" 
+                                    class="w-full bg-slate-950 text-slate-200 p-3 font-mono leading-relaxed focus:outline-none resize-none border-none"></textarea>
+                            </div>
+
+                            <!-- Execution Controls -->
+                            <div class="bg-slate-900 p-2 flex items-center justify-between border-t border-slate-800">
+                                <span class="text-[10px] text-slate-400">G++ Compiler Simulator</span>
+                                <div class="flex gap-2">
+                                    <button onclick="resetTerminal()" class="px-2.5 py-1 text-[11px] font-semibold text-slate-400 hover:text-white transition">
+                                        Clear Terminal
+                                    </button>
+                                    <button onclick="runCppSimulator()" id="runCodeBtn" class="px-3 py-1 text-xs font-bold bg-gGreen hover:bg-emerald-600 text-white rounded transition flex items-center gap-1 shadow">
+                                        <i class="fa-solid fa-play"></i> Run Code
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terminal Output Window -->
+                        <div class="rounded-xl overflow-hidden border border-slate-800 bg-black font-mono text-xs shadow-inner">
+                            <div class="bg-slate-900 px-3 py-1 text-[11px] text-slate-400 border-b border-slate-800 flex items-center justify-between">
+                                <span><i class="fa-solid fa-terminal text-gGreen mr-1.5"></i> Output Terminal</span>
+                                <span id="terminalStatus" class="text-slate-500">Ready</span>
+                            </div>
+                            <div id="terminalOutput" class="p-3 text-slate-300 min-h-[140px] max-h-[220px] overflow-y-auto space-y-1 leading-relaxed">
+                                <div class="text-slate-500 text-[11px]">System: Click "Run Code" to compile and execute the C++ binary...</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- TAB 3: ENGINEERING PORTFOLIO SHOWCASE -->
+                    <section id="tab-portfolio" class="space-y-4 hidden">
+                        <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                            Ringkasan Proyek & Riset Teknik Komputer PENS
+                        </div>
+
+                        <!-- Project Card 1: C++ Logic -->
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-gRed flex items-center gap-1.5">
+                                    <i class="fa-solid fa-code"></i> C/C++ System Programming
+                                </span>
+                                <span class="text-[10px] bg-red-500/10 text-red-500 font-mono px-2 py-0.5 rounded">Core Skill</span>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Menguasai sintaks prosedural, manipulasi memori dasar, struktur data (Array, Struct), dan pemrosesan algoritma di Visual Studio Code & GCC.
+                            </p>
+                        </div>
+
+                        <!-- Project Card 2: IEEE Samba Linux Paper -->
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-gYellow flex items-center gap-1.5">
+                                    <i class="fa-solid fa-server"></i> IEEE Linux File Server Research
+                                </span>
+                                <span class="text-[10px] bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 font-mono px-2 py-0.5 rounded">Draft Paper</span>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Menyusun draf riset IEEE untuk implementasi Samba File Server pada sistem operasi Linux di jaringan LAN. Menunjukkan pemahaman arsitektur jaringan lokal dan infrastruktur server.
+                            </p>
+                        </div>
+
+                        <!-- Project Card 3: Blender 3D -->
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-gBlue flex items-center gap-1.5">
+                                    <i class="fa-solid fa-cubes"></i> 3D Spatial & Layout Design
+                                </span>
+                                <span class="text-[10px] bg-blue-500/10 text-blue-500 font-mono px-2 py-0.5 rounded">Blender 3D</span>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Berpengalaman membuat pemodelan aset lingkungan 3D di Blender. Melatih sensitivitas tata letak visual, proporsi spatial, dan UI/UX layouting.
+                            </p>
+                        </div>
+
+                        <!-- Project Card 4: Web Prototype -->
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-gGreen flex items-center gap-1.5">
+                                    <i class="fa-solid fa-laptop-code"></i> DevTask Interactive App
+                                </span>
+                                <span class="text-[10px] bg-green-500/10 text-green-500 font-mono px-2 py-0.5 rounded">Live Demo</span>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Aplikasi Web Prototype berbasis HTML/JS/Tailwind ini menyimulasikan antarmuka mobile planner & kompilator C++ sebagai bukti nyata dedikasi maba PENS untuk GDGoC.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- TAB 4: DEVELOPER BIO & GDGOC PITCH -->
+                    <section id="tab-bio" class="space-y-4 hidden">
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center space-y-2">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-gBlue via-gGreen to-gYellow p-1 mx-auto shadow-md">
+                                <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-white font-extrabold text-xl">
+                                    GV
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100">Glen Victory Sihombing</h3>
+                            <p class="text-xs text-gBlue font-semibold">STr Teknik Komputer — PENS Class C '26</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Surabaya, Jawa Timur</p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pernyataan Komitmen GDGoC PENS:</h4>
+                            <div class="p-3 rounded-xl bg-gBlue/10 border border-gBlue/20 text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-2">
+                                <p>
+                                    "Sebagai mahasiswa baru STr Teknik Komputer PENS yang berfokus pada software engineering dan pemrograman C/C++, saya memiliki motivasi tinggi untuk berkembang di divisi Research and Development (RnD) GDGoC PENS."
+                                </p>
+                                <p>
+                                    "Logika ketat C/C++ yang telah saya pelajari memberikan fondasi kuat untuk beradaptasi cepat dengan framework Mobile Development modern (seperti Flutter/Dart). Saya siap belajar secara aktif, berkontribusi dalam riset teknologi Google, serta berkolaborasi dalam tim."
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <a href="mailto:glenvictsihombing@gmail.com" class="w-full py-2.5 px-4 bg-gBlue hover:bg-blue-600 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition shadow-md">
+                                <i class="fa-solid fa-envelope"></i> Hubungi Glen Victory
+                            </a>
+                        </div>
+                    </section>
+
+                </div>
+
+                <!-- MOBILE BOTTOM NAVIGATION BAR -->
+                <div class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-2 py-2 flex items-center justify-around z-20">
+                    <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center gap-1 text-gBlue transition-all">
+                        <i class="fa-solid fa-list-check text-base"></i>
+                        <span class="text-[10px] font-medium">Tasks</span>
+                    </button>
+                    <button onclick="switchTab('cpp')" id="nav-cpp" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all">
+                        <i class="fa-solid fa-terminal text-base"></i>
+                        <span class="text-[10px] font-medium">C++ Exec</span>
+                    </button>
+                    <button onclick="switchTab('portfolio')" id="nav-portfolio" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all">
+                        <i class="fa-solid fa-folder-open text-base"></i>
+                        <span class="text-[10px] font-medium">Portfolio</span>
+                    </button>
+                    <button onclick="switchTab('bio')" id="nav-bio" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all">
+                        <i class="fa-solid fa-user-astronaut text-base"></i>
+                        <span class="text-[10px] font-medium">Dev Info</span>
+                    </button>
+                </div>
+
+                <!-- PHONE HOME INDICATOR BAR -->
+                <div class="bg-white dark:bg-slate-900 py-1 flex justify-center">
+                    <div class="w-32 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-12 py-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
+        <p>© 2026 Glen Victory Sihombing — GDGoC PENS Recruitment Interactive Portfolio Prototype</p>
+        <p class="mt-1 text-[11px] text-slate-400 dark:text-slate-600">Built with HTML5, Tailwind CSS, JavaScript & C++ Logic Simulator</p>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // Initial Tasks State
+        let tasks = [
+            { id: 1, title: 'Implementasi Algoritma Search & Sorting di C++', category: 'C++ Programming', priority: 'High', completed: true },
+            { id: 2, title: 'Menyusun Draf IEEE Paper Samba Server Linux (LAN)', category: 'Linux Samba', priority: 'High', completed: false },
+            { id: 3, title: 'Praktikum Penyederhanaan Fungsi Logika Digital', category: 'Digital Logic', priority: 'Medium', completed: true },
+            { id: 4, title: 'Eksplorasi Dasar Flutter & Dart Framework (Google)', category: 'GDGoC Mobile', priority: 'High', completed: false },
+            { id: 5, title: 'Render Peta Visual 3D di Blender', category: 'General Engineering', priority: 'Low', completed: true }
+        ];
+
+        let currentFilter = 'all';
+        let currentCategory = 'all';
+        let activeTab = 'tasks';
+        let viewMode = 'mobile'; // 'mobile' or 'desktop'
+
+        // C++ Code Presets
+        const cppPresets = {
+            binary_search: `#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+// Glen's C++ Search Logic Prototype
+int binarySearch(const vector<int>& arr, int target) {
+    int left = 0, right = arr.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) return mid;
+        if (arr[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}
+
+int main() {
+    vector<int> data = {12, 24, 35, 47, 58, 69, 81, 95};
+    int target = 58;
+    
+    cout << "=== GDGoC PENS C++ Engine ===" << endl;
+    cout << "Dataset Size: " << data.size() << " elements" << endl;
+    
+    int index = binarySearch(data, target);
+    if (index != -1) {
+        cout << "[SUCCESS] Target " << target << " found at index: " << index << endl;
+    } else {
+        cout << "[NOT FOUND] Element not in dataset." << endl;
+    }
+    return 0;
+}`,
+            gpa_calc: `#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+struct Course {
+    string name;
+    int credits;
+    double gradePoint;
+};
+
+int main() {
+    cout << "=== PENS IPK Calculator System ===" << endl;
+    vector<Course> semester1 = {
+        {"Konsep Teknologi", 2, 4.0},
+        {"Pemrograman C++", 3, 3.8},
+        {"Logika Digital", 3, 3.7},
+        {"Matematika Komputasi", 2, 4.0}
+    };
+
+    double totalPoints = 0;
+    int totalCredits = 0;
+
+    for (const auto& c : semester1) {
+        totalPoints += (c.gradePoint * c.credits);
+        totalCredits += c.credits;
+        cout << "Course: " << c.name << " (" << c.credits << " SKS) -> Grade: " << c.gradePoint << endl;
+    }
+
+    double gpa = totalPoints / totalCredits;
+    cout << "-----------------------------------" << endl;
+    cout << "Total SKS: " << totalCredits << " | Calculated IPK: " << gpa << " / 4.00" << endl;
+    return 0;
+}`,
+            samba_log: `#include <iostream>
+#include <string>
+using namespace std;
+
+// Simulated Linux Samba File Server Monitor
+void checkServerStatus(string serviceName) {
+    cout << "[SYSTEM LOG] Inspecting daemon: " << serviceName << "..." << endl;
+    cout << "[NETWORK] Listening on port 139 & 445 (SMB/CIFS)" << endl;
+    cout << "[STATUS] Samba File Server running smoothly on Linux LAN." << endl;
+}
+
+int main() {
+    cout << "=== IEEE Research: Samba File Server Log ===" << endl;
+    checkServerStatus("smbd.service");
+    checkServerStatus("nmbd.service");
+    cout << "[SUCCESS] Active user sessions: 4 connected clients." << endl;
+    return 0;
+}`
+        };
+
+        // Output Log Templates for Simulation
+        const cppOutputs = {
+            binary_search: [
+                "[INFO] Compiling main.cpp with g++ -O3...",
+                "[INFO] Linking executable binary: ./main",
+                "--------------------------------------------------",
+                "=== GDGoC PENS C++ Engine ===",
+                "Dataset Size: 8 elements",
+                "Performing Binary Search for target: 58...",
+                "Step 1: Low = 0, High = 7, Mid = 3 (Val = 47) -> Search Right",
+                "Step 2: Low = 4, High = 7, Mid = 5 (Val = 69) -> Search Left",
+                "Step 3: Low = 4, High = 4, Mid = 4 (Val = 58) -> MATCH!",
+                "[SUCCESS] Target 58 found at index: 4",
+                "--------------------------------------------------",
+                "[PROCESS EXIT] Program returned code 0 in 0.003s"
+            ],
+            gpa_calc: [
+                "[INFO] Compiling main.cpp with g++ -O3...",
+                "[INFO] Executing ./main",
+                "--------------------------------------------------",
+                "=== PENS IPK Calculator System ===",
+                "Course: Konsep Teknologi (2 SKS) -> Grade: 4",
+                "Course: Pemrograman C++ (3 SKS) -> Grade: 3.8",
+                "Course: Logika Digital (3 SKS) -> Grade: 3.7",
+                "Course: Matematika Komputasi (2 SKS) -> Grade: 4",
+                "-----------------------------------",
+                "Total SKS: 10 | Calculated IPK: 3.85 / 4.00",
+                "--------------------------------------------------",
+                "[PROCESS EXIT] Program returned code 0 in 0.002s"
+            ],
+            samba_log: [
+                "[INFO] Initializing Linux Kernel Network Stack...",
+                "[INFO] Running Samba Daemon Test Suite...",
+                "--------------------------------------------------",
+                "=== IEEE Research: Samba File Server Log ===",
+                "[SYSTEM LOG] Inspecting daemon: smbd.service...",
+                "[NETWORK] Listening on port 139 & 445 (SMB/CIFS)",
+                "[STATUS] Samba File Server running smoothly on Linux LAN.",
+                "[SYSTEM LOG] Inspecting daemon: nmbd.service...",
+                "[NETWORK] NetBIOS Name Service Active",
+                "[STATUS] Samba File Server running smoothly on Linux LAN.",
+                "[SUCCESS] Active user sessions: 4 connected clients.",
+                "--------------------------------------------------",
+                "[PROCESS EXIT] Program returned code 0 in 0.005s"
+            ]
+        };
+
+        // On Load Init
+        window.onload = function() {
+            renderTasks();
+            loadCppPreset('binary_search');
+        };
+
+        // Render Task List & Progress Bar
+        function renderTasks() {
+            const listEl = document.getElementById('taskList');
+            listEl.innerHTML = '';
+
+            let filtered = tasks.filter(t => {
+                if (currentFilter === 'active') return !t.completed;
+                if (currentFilter === 'completed') return t.completed;
+                return true;
+            });
+
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(t => t.category === currentCategory);
+            }
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 text-xs">
+                        <i class="fa-solid fa-inbox text-2xl mb-1 text-slate-500"></i>
+                        <p>Tidak ada tugas yang ditemukan.</p>
+                    </div>
+                `;
+            } else {
+                filtered.forEach(task => {
+                    const taskCard = document.createElement('div');
+                    taskCard.className = `p-3 rounded-xl border transition-all duration-200 flex items-start justify-between gap-2 ${
+                        task.completed 
+                            ? 'bg-slate-100/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-70' 
+                            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm'
+                    }`;
+
+                    let badgeColor = 'bg-slate-500/10 text-slate-500';
+                    if (task.priority === 'High') badgeColor = 'bg-red-500/10 text-gRed';
+                    if (task.priority === 'Medium') badgeColor = 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400';
+                    if (task.priority === 'Low') badgeColor = 'bg-green-500/10 text-gGreen';
+
+                    taskCard.innerHTML = `
+                        <div class="flex items-start gap-2.5 flex-1 min-w-0">
+                            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})"
+                                class="mt-1 w-4 h-4 rounded text-gBlue focus:ring-gBlue cursor-pointer">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-semibold ${task.completed ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'} truncate">
+                                    ${escapeHtml(task.title)}
+                                </p>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium">
+                                        ${escapeHtml(task.category)}
+                                    </span>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded font-mono font-bold ${badgeColor}">
+                                        ${task.priority}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="deleteTask(${task.id})" class="text-slate-400 hover:text-gRed p-1 transition" title="Delete Task">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    `;
+                    listEl.appendChild(taskCard);
+                });
+            }
+
+            // Update Progress Stats
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+            document.getElementById('progressPercentage').innerText = `${percent}% Selesai`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+            document.getElementById('statCompleted').innerText = `${completed} Completed`;
+            document.getElementById('statTotal').innerText = `${total} Tasks Total`;
+        }
+
+        // Add Task
+        function handleAddTask(e) {
+            e.preventDefault();
+            const input = document.getElementById('newTaskInput');
+            const categorySelect = document.getElementById('newTaskCategory');
+            const prioritySelect = document.getElementById('newTaskPriority');
+
+            if (!input.value.trim()) return;
+
+            const newTask = {
+                id: Date.now(),
+                title: input.value.trim(),
+                category: categorySelect.value,
+                priority: prioritySelect.value,
+                completed: false
+            };
+
+            tasks.unshift(newTask);
+            input.value = '';
+            renderTasks();
+            showToast('Tugas baru berhasil ditambahkan!');
+        }
+
+        // Toggle Task Completed
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            renderTasks();
+        }
+
+        // Delete Task
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            renderTasks();
+            showToast('Tugas telah dihapus', 'info');
+        }
+
+        // Filters
+        function setFilter(filter) {
+            currentFilter = filter;
+            ['all', 'active', 'completed'].forEach(f => {
+                const btn = document.getElementById(`filter-${f}`);
+                if (f === filter) {
+                    btn.className = 'px-2.5 py-1 rounded-md text-[11px] font-semibold bg-gBlue text-white';
+                } else {
+                    btn.className = 'px-2.5 py-1 rounded-md text-[11px] font-semibold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400';
+                }
+            });
+            renderTasks();
+        }
+
+        function setCategoryFilter(cat) {
+            currentCategory = cat;
+            renderTasks();
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            activeTab = tabId;
+            const tabs = ['tasks', 'cpp', 'portfolio', 'bio'];
+            const titles = {
+                tasks: 'Study Planner',
+                cpp: 'C++ Code Terminal',
+                portfolio: 'Engineering Showcase',
+                bio: 'Developer Bio & Pitch'
+            };
+
+            document.getElementById('activeTabTitle').innerText = titles[tabId];
+
+            tabs.forEach(t => {
+                const section = document.getElementById(`tab-${t}`);
+                const navBtn = document.getElementById(`nav-${t}`);
+                if (t === tabId) {
+                    section.classList.remove('hidden');
+                    navBtn.className = 'flex flex-col items-center gap-1 text-gBlue transition-all';
+                } else {
+                    section.classList.add('hidden');
+                    navBtn.className = 'flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-all';
+                }
+            });
+        }
+
+        // C++ Simulator Functions
+        function loadCppPreset(key) {
+            const textarea = document.getElementById('cppCodeTextarea');
+            textarea.value = cppPresets[key] || '';
+            resetTerminal();
+        }
+
+        function resetTerminal() {
+            const term = document.getElementById('terminalOutput');
+            term.innerHTML = '<div class="text-slate-500 text-[11px]">System: Click "Run Code" to compile and execute the C++ binary...</div>';
+            document.getElementById('terminalStatus').innerText = 'Ready';
+            document.getElementById('terminalStatus').className = 'text-slate-500';
+        }
+
+        let isRunning = false;
+        async function runCppSimulator() {
+            if (isRunning) return;
+            isRunning = true;
+
+            const runBtn = document.getElementById('runCodeBtn');
+            const statusEl = document.getElementById('terminalStatus');
+            const term = document.getElementById('terminalOutput');
+            const presetKey = document.getElementById('cppPresetSelect').value;
+            const logs = cppOutputs[presetKey] || ["[INFO] Executing custom code...", "[SUCCESS] Process finished."];
+
+            runBtn.disabled = true;
+            runBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Compiling...';
+            statusEl.innerText = 'Compiling...';
+            statusEl.className = 'text-gYellow font-semibold';
+            term.innerHTML = '';
+
+            // Simulate typing execution output
+            for (let line of logs) {
+                const lineEl = document.createElement('div');
+                if (line.includes('[SUCCESS]')) lineEl.className = 'text-gGreen font-bold';
+                else if (line.includes('[INFO]')) lineEl.className = 'text-gBlue';
+                else if (line.includes('===')) lineEl.className = 'text-gYellow font-bold';
+                else if (line.includes('----------------')) lineEl.className = 'text-slate-600';
+                else lineEl.className = 'text-slate-200';
+
+                term.appendChild(lineEl);
+                term.scrollTop = term.scrollHeight;
+
+                // Typing effect delay
+                await typeText(lineEl, line);
+                await sleep(150);
+            }
+
+            statusEl.innerText = 'Finished (Code 0)';
+            statusEl.className = 'text-gGreen font-semibold';
+            runBtn.disabled = false;
+            runBtn.innerHTML = '<i class="fa-solid fa-play"></i> Run Code';
+            isRunning = false;
+        }
+
+        function typeText(element, text) {
+            return new Promise((resolve) => {
+                let i = 0;
+                element.classList.add('typing-cursor');
+                const interval = setInterval(() => {
+                    element.innerText = text.substring(0, i);
+                    i++;
+                    if (i > text.length) {
+                        clearInterval(interval);
+                        element.classList.remove('typing-cursor');
+                        resolve();
+                    }
+                }, 10);
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // View Mode Toggle (Mobile Frame vs Expanded Desktop View)
+        function toggleViewMode() {
+            const frame = document.getElementById('phoneFrame');
+            const icon = document.getElementById('viewIcon');
+            const text = document.getElementById('viewText');
+
+            if (viewMode === 'mobile') {
+                viewMode = 'desktop';
+                frame.classList.remove('max-w-md', 'rounded-[2.5rem]', 'border-4', 'sm:border-[10px]', 'min-h-[700px]');
+                frame.classList.add('max-w-4xl', 'rounded-2xl', 'border', 'min-h-[600px]');
+                icon.className = 'fa-solid fa-desktop text-gGreen';
+                text.innerText = 'Switch to Mobile View';
+                showToast('Switched to Desktop Layout Mode');
+            } else {
+                viewMode = 'mobile';
+                frame.classList.remove('max-w-4xl', 'rounded-2xl', 'border', 'min-h-[600px]');
+                frame.classList.add('max-w-md', 'rounded-[2.5rem]', 'border-4', 'sm:border-[10px]', 'min-h-[700px]');
+                icon.className = 'fa-solid fa-mobile-screen text-gBlue';
+                text.innerText = 'Switch to Desktop Mode';
+                showToast('Switched to Mobile App Simulator');
+            }
+        }
+
+        // Theme Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400';
+            }
+        }
+
+        // Utility: Toast Notification (No alert() used)
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-gGreen' : 'bg-gBlue';
+            
+            toast.className = `${bgColor} text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${escapeHtml(msg)}`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
