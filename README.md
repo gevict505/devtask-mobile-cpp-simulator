@@ -29,5 +29,5 @@ A sleek, interactive web application that simulates a native mobile application 
 ##  Author
 
 **Glen Victory Sihombing**  
-- STr Teknik Komputer — Politeknik Elektronika Negeri Surabaya (PENS)  
-- NRP: 3226600070 (Kelas 1-TKC)
+- Applied Bachelor of Computer Engineering — Politeknik Elektronika Negeri Surabaya (PENS)  
+
