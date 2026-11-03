@@ -6,13 +6,13 @@ A sleek, interactive web application that simulates a native mobile application 
 
 ##  Main Features
 
-- ** Mobile Device & Desktop Dual View:** Seamlessly toggle between a realistic mobile phone frame mockup and a full-screen desktop dashboard.
-- ** C++ Logic Execution Simulator:** 
+- **Mobile Device & Desktop Dual View:** Seamlessly toggle between a realistic mobile phone frame mockup and a full-screen desktop dashboard.
+- **C++ Logic Execution Simulator:** 
   - Interactive code viewer with live editing capabilities.
   - Pre-loaded execution presets: *Binary Search Algorithm*, *Student Grade Calculator*, and *Linux Samba Log Parser*.
   - Simulated compilation terminal with real-time logging and status outputs.
-- ** DevTask Study Planner:** Full interactive task manager featuring category filtration (C++, Digital Logic, Linux Samba, GDGoC Mobile), completion tracking, and visual progress metrics.
-- ** Google Tech Theme:** Designed using Google Developer color scheme and responsive layouting.
+- **DevTask Study Planner:** Full interactive task manager featuring category filtration (C++, Digital Logic, Linux Samba, GDGoC Mobile), completion tracking, and visual progress metrics.
+- **Google Tech Theme:** Designed using Google Developer color scheme and responsive layouting.
 
 ---
 
